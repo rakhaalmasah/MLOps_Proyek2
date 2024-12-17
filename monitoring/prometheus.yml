@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s 
+
+scrape_configs:
+  - job_name: 'flask_app'
+    metrics_path: '/metrics' 
+    scheme: https 
+    static_configs:
+      - targets: ['cc-model-serving-447282078912.asia-southeast2.run.app']
+        labels:
+          env: 'production'

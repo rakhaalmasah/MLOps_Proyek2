@@ -1,0 +1,43 @@
+{
+  "evalConfig": {
+    "modelSpecs": [
+      {
+        "labelKey": "IXIC"
+      }
+    ],
+    "slicingSpecs": [
+      {}
+    ],
+    "metricsSpecs": [
+      {
+        "metrics": [
+          {
+            "className": "MeanSquaredError",
+            "threshold": {
+              "valueThreshold": {
+                "lowerBound": 500.0
+              }
+            }
+          },
+          {
+            "className": "MeanAbsoluteError",
+            "threshold": {
+              "valueThreshold": {
+                "lowerBound": 50.0
+              }
+            }
+          }
+        ],
+        "modelNames": [
+          ""
+        ]
+      }
+    ]
+  },
+  "version": "0.47.1",
+  "dataLocation": "<user provided PCollection>",
+  "fileFormat": "<unknown>",
+  "modelLocations": {
+    "": "/content/muhrakhaal/muhrakhaal_pipeline/Trainer/model/7/Format-Serving"
+  }
+}
