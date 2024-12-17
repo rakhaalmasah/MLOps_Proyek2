@@ -1,87 +1,20 @@
-# Submission 1: Prediksi Indeks Nasdaq
+# **Submission 2: Prediksi Indeks Nasdaq**  
+**Nama: Muhammad Rakha Almasah**  
+**Username dicoding: muhrakhaal**  
 
-**Nama:** Muhammad Rakha Almasah  
-**Username Dicoding:** muhrakhaal  
-
-## **Deskripsi Proyek**  
-Proyek ini bertujuan untuk memprediksi nilai **Indeks Nasdaq (IXIC)** berdasarkan data harga saham dari beberapa perusahaan besar seperti **Apple (AAPL)**, **Microsoft (MSFT)**, **Amazon (AMZN)**, dan **Berkshire Hathaway (BRK_B)**. Pipeline ini dibangun menggunakan **TensorFlow Extended (TFX)** dan hasil model diterapkan melalui **Flask API** yang diakses menggunakan **Ngrok**.
-
----
-
-| **Kategori**         | **Deskripsi**                                                                                      |
-|-----------------------|--------------------------------------------------------------------------------------------------|
-| **Dataset**           | [cleaned_merged_stock_data.csv](https://raw.githubusercontent.com/rakhaalmasah/MLOps_Proyek1/9475b7b9259adff80d5b639dc54ff9c8447db4be/cleaned_merged_stock_data.csv) <br> Dataset ini diperoleh dari proyek di kelas **Machine Learning Terapan (Predictive Analytics)**. Dataset mencakup harga saham harian dari perusahaan-perusahaan besar dan indeks Nasdaq (IXIC).   |
-| **Masalah**           | Permasalahan utama adalah **memprediksi nilai indeks Nasdaq (IXIC)** berdasarkan harga saham dari perusahaan terkemuka. Ini merupakan masalah **regresi** di mana nilai indeks diprediksi sebagai nilai numerik berkelanjutan.      |
-| **Solusi Machine Learning** | Solusi yang dibuat melibatkan pengembangan pipeline **Machine Learning** end-to-end menggunakan **TFX**. Pipeline ini mencakup proses pengolahan data, pelatihan model dengan **Keras Tuner**, evaluasi model menggunakan **TFMA**, dan penerapan model melalui **Flask API**. Target akhir adalah meminimalkan error prediksi dan membuat model yang siap digunakan dalam produksi.   |
-| **Metode Pengolahan** | 1. **Pembagian Data**: Data dibagi menjadi train (80%) dan eval (20%) menggunakan `CsvExampleGen`. <br> 2. **Statistik Data**: Menggunakan `StatisticsGen` untuk memahami distribusi data. <br> 3. **Validasi Skema**: `SchemaGen` digunakan untuk membuat skema dan memvalidasi anomali data menggunakan `ExampleValidator`. <br> 4. **Transformasi Data**: Normalisasi fitur dilakukan dengan **Z-score scaling** menggunakan **TensorFlow Transform (TFT)**. <br> 5. **Feature Engineering**: Fitur masukan **AAPL**, **MSFT**, **AMZN**, dan **BRK_B** digunakan, sedangkan **IXIC** menjadi target prediksi.   |
-| **Arsitektur Model**  | Model dibangun menggunakan **Neural Network** sederhana dengan arsitektur sebagai berikut: <br> - **Input Layer**: Fitur numerik dengan bentuk `(batch_size, 1)`. <br> - **Hidden Layers**: <br>    - Hidden Layer 1: 192 neuron dengan **ReLU activation** (hasil tuning terbaik). <br>    - Hidden Layer 2: 128 neuron dengan **ReLU activation**. <br> - **Output Layer**: 1 neuron untuk memprediksi nilai kontinu (IXIC). <br> Model menggunakan **optimizer Adam** dan **loss function MSE**. |
-| **Metrik Evaluasi**   | - **Mean Squared Error (MSE)**: Mengukur rata-rata kuadrat error. <br> - **Mean Absolute Error (MAE)**: Mengukur rata-rata absolut error. <br> Target yang ditetapkan adalah **MSE < 500.0** dan **MAE < 50.0**. |
-| **Performa Model**    | Berdasarkan hasil evaluasi: <br> - **MAE**: 238.13 <br> - **MSE**: 105652.79 <br> Performa model sudah cukup baik namun dapat ditingkatkan dengan optimasi lebih lanjut. Model ini diuji menggunakan **Flask API** dan memberikan prediksi yang stabil. |
+| **Parameter**               | **Deskripsi**                                                                                 |
+|-----------------------------|----------------------------------------------------------------------------------------------|
+| **Dataset**                 | Dataset ini diperoleh dari proyek di kelas Machine Learning Terapan (Predictive Analytics). Dataset mencakup harga saham harian dari perusahaan-perusahaan besar dan indeks Nasdaq (IXIC). [cleaned_merged_stock_data.csv](https://raw.githubusercontent.com/rakhaalmasah/MLOps_Proyek1/9475b7b9259adff80d5b639dc54ff9c8447db4be/cleaned_merged_stock_data.csv)  |
+| **Masalah**                 | Permasalahan yang diangkat adalah prediksi harga indeks Nasdaq Composite (IXIC) berdasarkan harga saham harian perusahaan besar seperti Apple (AAPL), Microsoft (MSFT), Amazon (AMZN), dan Berkshire Hathaway (BRK_B). Model bertujuan membantu investor untuk memahami tren harga indeks. |
+| **Solusi Machine Learning** | Solusi yang dibuat adalah **model regresi menggunakan TensorFlow** untuk memprediksi harga IXIC berdasarkan fitur harga saham input. Model ini dilatih menggunakan data terpreproses untuk menghasilkan prediksi akurat. |
+| **Metode Pengolahan**       | Data dipreproses menggunakan **TensorFlow Transform (TFT)**. Metode **scale_to_z_score** digunakan untuk menormalkan fitur AAPL, MSFT, AMZN, dan BRK_B. Proses ini membantu model memahami data yang terdistribusi dengan baik. |
+| **Arsitektur Model**        | - **Input Layer**: 4 fitur input (AAPL, MSFT, AMZN, BRK_B) <br> - **Hidden Layers**: 2 Dense layers dengan **ReLU activation** dan **Dropout** untuk regularisasi. <br> - **Output Layer**: 1 unit untuk memprediksi IXIC dengan **Linear Activation**. <br> - **Optimizer**: Adam <br> - **Loss Function**: Mean Squared Error (MSE) |
+| **Metrik Evaluasi**         | Model dievaluasi menggunakan dua metrik utama: <br> - **Mean Squared Error (MSE)** <br> - **Mean Absolute Error (MAE)** |
+| **Performa Model**          | Berdasarkan hasil training, berikut performa model: <br> - **Training Loss**: 75,271.53 <br> - **Validation Loss (MSE)**: 109,337.27 <br> - **Validation MAE**: 243.39 <br> Model berhasil mencapai **lower bound** threshold dari MSE dan MAE pada tahap evaluasi. |
+| **Opsi Deployment**         | Model dideploy menggunakan **Google Cloud Run**. Model dilayani melalui endpoint Flask yang menggunakan TensorFlow Serving. Ini memungkinkan integrasi model dengan aplikasi dan API yang lebih luas. |
+| **Web App**                 | [CC Model Serving](https://cc-model-serving-447282078912.asia-southeast2.run.app) <br> Endpoint: `/predict` |
+| **Monitoring**              | Proses monitoring dilakukan menggunakan **Google Cloud Run**, **Prometheus**, dan **Grafana**:  <br> - **Request Count**: Lonjakan permintaan **2xx** yang berhasil diakses pada endpoint `/metrics` dan `/predict`. <br> - **Request Latency**: Waktu respons rata-rata stabil meskipun terdapat lonjakan trafik. <br> - **Container Instances**: Jumlah container aktif **1-2 instances**, menunjukkan autoscaling berjalan sesuai trafik. <br> - **Grafana Dashboard**: Grafik menampilkan request metrics untuk endpoint produksi dengan tren meningkat secara linear. <br> - **Prometheus**: Mengumpulkan metrik `http_request_total` dengan pertumbuhan request GET dan POST yang konsisten. |
 
 ---
 
-## **Tahapan Pipeline**
-1. **Pengolahan Data**:  
-   - Data diproses menggunakan **TFX** dengan komponen **CsvExampleGen**, **StatisticsGen**, **SchemaGen**, dan **Transform**.  
-   - Transformasi data melibatkan **Z-score normalization** pada fitur-fitur numerik.
-
-2. **Pengembangan Model**:  
-   - Hyperparameter Tuning dilakukan menggunakan **Keras Tuner** dengan metode **Random Search**.  
-   - Arsitektur model terbaik memiliki **192** neuron di hidden layer pertama dan **128** neuron di hidden layer kedua.
-
-3. **Evaluasi Model**:  
-   - Evaluasi dilakukan menggunakan **TFMA** dengan metrik **MAE** dan **MSE**.  
-   - Hasil evaluasi:  
-     - **MAE**: 238.13  
-     - **MSE**: 105652.79  
-
-4. **Deployment**:  
-   - Model diterapkan menggunakan **Flask API** dan diakses melalui **Ngrok** untuk menyediakan endpoint publik.  
-
-5. **Testing Model**:  
-   - Model diuji dengan POST request ke endpoint Flask dan memberikan prediksi sebagai berikut:  
-
-### Contoh Request:  
-```json
-POST /predict
-{
-  "features": {
-    "AAPL": [111.28],
-    "MSFT": [336.32],
-    "AMZN": [138.12],
-    "BRK_B": [553.50],
-    "IXIC": [0.0]
-  }
-}
-```
-
-### Contoh Response:  
-```json
-{
-  "predictions": [
-    1210132.75
-  ]
-}
-```
-
----
-
-## **Hasil Training dan Evaluasi**
-### Hasil Tuning Hyperparameter:  
-- **Best Hyperparameters**:  
-  - **units_1**: 192  
-  - **units_2**: 128  
-- **Best Validation MAE**: 5045.67  
-
-### Hasil Evaluasi Akhir:  
-- **Mean Absolute Error (MAE)**: 238.13  
-- **Mean Squared Error (MSE)**: 105652.79  
-
----
-
-## **Kesimpulan**
-Model berhasil dikembangkan dengan pipeline **TFX** yang lengkap, mulai dari pre-processing data, pelatihan model, tuning hyperparameter, evaluasi, hingga deployment.  
-Performa model menunjukkan **MAE 238.13** dan **MSE 105652.79**, yang dapat ditingkatkan lebih lanjut melalui optimasi data dan arsitektur model.  
-Model ini telah berhasil di-deploy menggunakan **Flask API** dan diuji menggunakan **Ngrok** untuk memastikan fungsionalitasnya dalam lingkungan produksi.
-
----
+Jika ada revisi lebih lanjut atau tambahan penjelasan, silakan beri tahu saya!
