@@ -12,7 +12,38 @@
 | **Metrik Evaluasi**         | Model dievaluasi menggunakan dua metrik utama: <br> - **Mean Squared Error (MSE)**: Mengukur rata-rata kuadrat error antara prediksi model dan data aktual. <br> - **Mean Absolute Error (MAE)**: Mengukur rata-rata absolut dari error prediksi. |
 | **Performa Model**          | Berdasarkan hasil training dan evaluasi: <br> - **Training Loss (MSE)**: 75,271.53 <br> - **Training MAE**: 214.51 <br> - **Validation Loss (MSE)**: 137,429.84 <br> - **Validation MAE**: 281.28 <br> Model menunjukkan performa yang stabil dengan nilai loss yang menurun secara konsisten pada training dan validation set. |
 | **Opsi Deployment**         | Model di-deploy menggunakan **Flask** sebagai backend. Endpoint API dikembangkan untuk melayani permintaan prediksi. Layanan kemudian di-host di **Google Cloud Run** agar dapat diakses secara publik dengan autoscaling otomatis berdasarkan jumlah permintaan. |
-| **Web App**                 | Endpoint prediksi dapat diakses melalui: [CC Model Serving](https://cc-model-serving-447282078912.asia-southeast2.run.app) <br> Endpoint: `/predict` |
+| **Web App**                 | Endpoint dapat diakses melalui: <br> - [CC Model Serving Metrics](https://cc-model-serving-447282078912.asia-southeast2.run.app/metrics) <br> Endpoint: `/predict` **(method: POST)** <br> - **Monitoring**: Endpoint: `/metrics` **(method: GET)** untuk menampilkan data metrik yang digunakan oleh Prometheus. |
 | **Monitoring**              | Monitoring performa model dilakukan menggunakan kombinasi **Google Cloud Run**, **Prometheus**, dan **Grafana**:  <br> - **Request Count**: Lonjakan permintaan berhasil direkam dengan status **2xx** untuk endpoint `/metrics` dan `/predict`. <br> - **Request Latency**: Waktu respons menunjukkan kestabilan meskipun ada lonjakan trafik. Grafik menunjukkan nilai latensi rata-rata **di bawah 5 detik**. <br> - **Container Instances**: Terdapat **1-2 container aktif** dengan **autoscaling** untuk menangani beban kerja yang meningkat. <br> - **Grafana Dashboard**: Menampilkan metrik **http_request_created** dan **http_request_duration_seconds** yang menunjukkan lonjakan konsisten pada endpoint produksi. <br> - **Prometheus**: Visualisasi grafik **http_request_total** menunjukkan peningkatan linear dari permintaan **GET** ke `/metrics` dan **POST** ke `/predict`. |
+
+---
+
+### **Penjelasan Penggunaan Endpoint `/predict`**  
+Endpoint `/predict` digunakan untuk mendapatkan hasil prediksi dari model. Metode HTTP yang digunakan adalah **POST**, dan data input dikirim dalam format **JSON**. Berikut adalah contoh kode Python untuk mengakses endpoint ini:
+
+```python
+import requests
+
+FLASK_SERVER_URL = "https://cc-model-serving-447282078912.asia-southeast2.run.app/predict"
+
+data = {
+    "features": {
+        "AAPL": [142.65],
+        "MSFT": [342.64],
+        "AMZN": [131.12],
+        "BRK_B": [453.45],
+        "IXIC": [0.0]
+    }
+}
+
+response = requests.post(FLASK_SERVER_URL, json=data)
+
+if response.status_code == 200:
+    print("Hasil Prediksi:", response.json()["predictions"])
+else:
+    print("Error:", response.text)
+```
+
+### **Penjelasan Endpoint `/metrics`**  
+Endpoint `/metrics` digunakan untuk **monitoring** model dengan **Prometheus**. Data metrik seperti penggunaan CPU, memori, jumlah request, dan durasi request akan ditampilkan dalam format yang dapat diproses oleh Prometheus.
 
 ---
